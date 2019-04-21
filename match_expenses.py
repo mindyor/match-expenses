@@ -25,14 +25,14 @@ def main():
         transaction["Description"] = tidy_desc(transaction["Description"])
 
     for reimbursement in reimbursements:
-        reimbursement["Timestamp"] = datetime.strptime(reimbursement["\xef\xbb\xbfTimestamp"].split(" ")[0], "%Y-%m-%d").date()
+        reimbursement["Date"] = datetime.strptime(reimbursement["\xef\xbb\xbfTimestamp"].split(" ")[0], "%Y-%m-%d").date()
         reimbursement["Amount"] = str(reimbursement["Amount"]).replace(",", "").replace("-","")
         reimbursement["Merchant"] = tidy_desc(reimbursement["Merchant"])
 
     reimbursed_transactions = []
     unmatched_reimbursements = []
     for reimbursement in reimbursements:
-        rdate = reimbursement["Timestamp"]
+        rdate = reimbursement["Date"]
         rcost = str(reimbursement["Amount"])
         rdesc = reimbursement["Merchant"]
 
@@ -43,11 +43,15 @@ def main():
             tdesc = transaction["Description"]
 
             if tcost == rcost:
-                if tdate - rdate < timedelta(days = 10):
+                # print(rdesc, tdesc, rdate, tdate, rcost, tcost)
+                if tdate - rdate < timedelta(days = 5):
                     if tdesc == rdesc:
                         reimbursed_transactions.append(tuple(transaction.values()))
                         found = True
+                        # print "match"
+                        break
         if not found:
+            print(rdate, rcost, rdesc)
             unmatched_reimbursements.append(tuple(reimbursement.values()))
 
     reimbursed_transactions = set(reimbursed_transactions)
@@ -95,6 +99,8 @@ def tidy_desc(description):
         return "LUCKY SUPERMARKETS"
     if "WALGREENS" in tidied_description:
         return "WALGREENS"
+    if "WHOLE FOODS" in tidied_description:
+        return "WHOLE FOODS"
     if "WHOLEFDS" in tidied_description:
         return "WHOLE FOODS"
     if "KING'S CAFE" in tidied_description:
