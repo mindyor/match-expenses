@@ -3,13 +3,13 @@ from pprint import pprint
 from datetime import datetime
 
 def main():
-    with open("reimbursements.csv", mode="r") as f:
-        reimbursements = list(csv.DictReader(f))
-    print "reimbursements", len(reimbursements)
-
     with open("transactions.csv", mode="r") as f:
         transactions = list(csv.DictReader(f))
     print "transactions", len(transactions)
+
+    with open("reimbursements.csv", mode="r") as f:
+        reimbursements = list(csv.DictReader(f))
+    print "reimbursements", len(reimbursements)
 
     print
 
@@ -37,22 +37,20 @@ def main():
     transactions = {tuple(t.values()) for t in transactions}
     reimbursements = {tuple(r.values()) for r in reimbursements}
 
-    print "transactions", len(transactions)
-    print "reimbursed transactions", len(reimbursed_transactions)
-    print
+    unexpensed_transactions = transactions.difference(reimbursed_transactions)
+    return reimbursed_transactions, unexpensed_transactions
 
-    return transactions.difference(reimbursed_transactions), reimbursements.difference(transactions)
-
+def write_to_file(payload, filepath):
+    with open(filepath, "w") as f:
+        writer = csv.writer(f)
+        writer.writerows(payload)
 
 if __name__ == "__main__":
-    results, leftovers = main()
-    print "results", len(results)
-    with open("/Users/mindyor/play/finances/output.csv", "w") as f:
-        writer = csv.writer(f)
-        writer.writerows(results)
+    matches, unexpensed = main()
 
-    print "leftovers", len(leftovers)
-    with open("/Users/mindyor/play/finances/leftovers.csv", "w") as f:
-        writer = csv.writer(f)
-        writer.writerows(leftovers)
+    print "matches with reimbursements", len(matches)
+    write_to_file(matches, "/Users/mindyor/play/finances/matches.csv")
+
+    print "unexpensed transactions", len(unexpensed)
+    write_to_file(unexpensed, "/Users/mindyor/play/finances/unexpensed_transactions.csv")
 
