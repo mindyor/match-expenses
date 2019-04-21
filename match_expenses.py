@@ -6,7 +6,7 @@ from datetime import timedelta
 import re
 
 def main():
-    with open("txn_2019_2.csv", mode="r") as f:
+    with open("transactions.csv", mode="r") as f:
         transactions = list(csv.DictReader(f))
     print "transactions", len(transactions)
 
