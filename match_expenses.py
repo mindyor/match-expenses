@@ -62,63 +62,45 @@ def main():
     return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
 
 def tidy_desc(description):
-    tidied_description = description.upper().replace("SQ *","")
-    tidied_description = tidied_description.replace("&AMP;","&")
-    tidied_description = tidied_description.replace("  "," ").replace("  "," ").replace("  "," ").replace("  "," ")
-    if "LYFT" in tidied_description:
-        return "LYFT"
-    if "TAXI" in tidied_description:
-        return "TAXI"
-    if "STARBUCKS" in tidied_description:
-        return "STARBUCKS"
-    if "AIRBNB" in tidied_description:
-        return "AIRBNB"
-    if "RESIDENCE INN" in tidied_description:
-        return "MARRIOTT"
-    if "MARRIOTT" in tidied_description:
-        return "MARRIOTT"
-    if "DOUBLETREE" in tidied_description:
-        return "DOUBLETREE"
-    if "WHOTELS" in tidied_description:
-        return "W HOTELS"
-    if "FLORET" in tidied_description:
-        return "FLORET"
-    if "ALASKA AIR" in tidied_description:
-        return "ALASKA AIRLINES"
-    if "RACHEL" in tidied_description:
-        return "RACHEL'S GINGER BEER"
-    if "THE JUICY CAFE" in tidied_description:
-        return "8TH & OLIVE"
-    if "GUARDIAN" in tidied_description:
-        return "GUARDIAN NEWS & MEDIA"
-    if "S TECHNICAL BOOKS" in tidied_description:
-        return "ADA'S TECHNICAL BOOKS"
-    if "UNITED AIR" in tidied_description:
-        return "UNITED AIRLINES"
-    if "LUCKY #736 OAKLAND" in tidied_description:
-        return "LUCKY SUPERMARKETS"
-    if "WALGREENS" in tidied_description:
-        return "WALGREENS"
-    if "WHOLE FOODS" in tidied_description:
-        return "WHOLE FOODS"
-    if "WHOLEFDS" in tidied_description:
-        return "WHOLE FOODS"
-    if "KING'S CAFE" in tidied_description:
-        return "SITKA AND SPRUCE"
-    if "KUKAI RAMEN" in tidied_description:
-        return "KUKAI RAMEN"
-    if "RITE AID" in tidied_description:
-        return "RITE AID"
-    if "PEET" in tidied_description:
-        return "PEET'S COFFEE AND TEAS"
-    if "CENTURY CAFE" in tidied_description:
-        return "CENTURY CAFE"
-    if "SOUND TRANSIT" in tidied_description:
-        return "SOUND TRANSIT"
-    if bool(re.search("UNITED \d+", tidied_description)):
-        return "UNITED AIRLINES"
-    if bool(re.search(" CAB$", tidied_description)):
-        return "TAXI"
+    tidied_description = description.upper()\
+        .replace("SQ *", "")\
+        .replace("&AMP;", "&")
+
+    tidied_description = re.sub(" +", " ", tidied_description)
+
+    description_map = {
+        "AIRBNB": "AIRBNB",
+        "ALASKA AIR": "ALASKA AIRLINES",
+        re.compile(" CAB$"): "Taxi",
+        "CENTURY CAFE": "CENTURY CAFE",
+        "DOUBLETREE": "DOUBLETREE",
+        "FLORET": "FLORET",
+        "GUARDIAN": "GUARDIAN NEWS & MEDIA",
+        "THE JUICY CAFE": "8TH & OLIVE",
+        "KING'S CAFE": "SITKA AND SPRUCE",
+        "KUKAI RAMEN": "KUKAI RAMEN",
+        "LYFT": "LYFT",
+        "MARRIOTT": "MARRIOTT",
+        "LUCKY #736 OAKLAND": "LUCKY SUPERMARKETS",
+        "PEET": "PEET'S COFFEE AND TEAS",
+        "RESIDENCE INN": "MARRIOTT",
+        "RITE AID": "RITE AID",
+        "RACHEL": "RACHEL'S GINGER BEER",
+        "S TECHNICAL BOOKS": "ADA'S TECHNICAL BOOKS",
+        "SOUND TRANSIT": "SOUND TRANSIT",
+        "STARBUCKS": "STARBUCKS",
+        "TAXI": "TAXI",
+        "UNITED AIR": "UNITED AIRLINES",
+        re.compile("UNITED \d+"): "UNITED AIRLINES",
+        "WALGREENS": "WALGREENS",
+        "WHOLEFDS": "WHOLE FOODS",
+        "WHOTELS": "W HOTELS",
+    }
+
+    for description_matcher, cleaned_description in description_map.items():
+        if re.search(description_matcher, tidied_description):
+            return cleaned_description
+
     return tidied_description
 
 def write_to_file(payload, filepath):
