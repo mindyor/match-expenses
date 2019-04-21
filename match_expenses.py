@@ -48,7 +48,6 @@ def main():
                     if tdesc == rdesc:
                         reimbursed_transactions.append(tuple(transaction.values()))
                         found = True
-                        # print "match"
                         break
         if not found:
             print(rdate, rcost, rdesc)
