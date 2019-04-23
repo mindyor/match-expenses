@@ -1,5 +1,7 @@
 *.csv
 
+*.pyc
+
 .idea
 venv/
 *.iml

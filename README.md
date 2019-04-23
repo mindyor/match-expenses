@@ -35,7 +35,7 @@ And if you got 2 of the same coffees on the same days, and only expensed one of 
 Proceed at your own risk :)
 
 ```bash
-python match_expenses.py
+python scripts/match_expenses.py
 ```
 
 # Out of (near term) scope
