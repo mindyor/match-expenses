@@ -30,5 +30,9 @@ I've also noticed that airlines and hotels don't quite group their charges the s
 
 Proceed at your own risk :)
 
+```bash
+python match_expenses.py
+```
+
 # Credits
 Thanks @walkerdb for the inspiration and the starting script!

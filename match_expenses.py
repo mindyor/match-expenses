@@ -2,6 +2,7 @@ import csv
 import re
 from datetime import datetime
 from datetime import timedelta
+import json
 
 
 def main():
@@ -74,36 +75,9 @@ def tidy_desc(description):
 
     tidied_description = re.sub(" +", " ", tidied_description)
 
-    description_map = {
-        "AIRBNB": "AIRBNB",
-        "ALASKA AIR": "ALASKA AIRLINES",
-        re.compile(" CAB$"): "Taxi",
-        "CENTURY CAFE": "CENTURY CAFE",
-        "DOUBLETREE": "DOUBLETREE",
-        "FLORET": "FLORET",
-        "GUARDIAN": "GUARDIAN NEWS & MEDIA",
-        "THE JUICY CAFE": "8TH & OLIVE",
-        "KING'S CAFE": "SITKA AND SPRUCE",
-        "KUKAI RAMEN": "KUKAI RAMEN",
-        "LYFT": "LYFT",
-        "MARRIOTT": "MARRIOTT",
-        "LUCKY #736 OAKLAND": "LUCKY SUPERMARKETS",
-        "PEET": "PEET'S COFFEE AND TEAS",
-        "RESIDENCE INN": "MARRIOTT",
-        "RITE AID": "RITE AID",
-        "RACHEL": "RACHEL'S GINGER BEER",
-        "S TECHNICAL BOOKS": "ADA'S TECHNICAL BOOKS",
-        "SOUND TRANSIT": "SOUND TRANSIT",
-        "STARBUCKS": "STARBUCKS",
-        "TAXI": "TAXI",
-        "UNITED AIR": "UNITED AIRLINES",
-        re.compile("UNITED \d+"): "UNITED AIRLINES",
-        "WALGREENS": "WALGREENS",
-        "WHOLEFDS": "WHOLE FOODS",
-        "WHOTELS": "W HOTELS",
-    }
+    description_map = json.load(open("resources/description.json"))
 
-    for description_matcher, cleaned_description in description_map.items():
+    for description_matcher, cleaned_description in description_map.iteritems():
         if re.search(description_matcher, tidied_description):
             return cleaned_description
 
