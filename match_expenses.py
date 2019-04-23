@@ -1,9 +1,8 @@
 import csv
-from pprint import pprint
-from datetime import datetime
-from datetime import date
-from datetime import timedelta
 import re
+from datetime import datetime
+from datetime import timedelta
+
 
 def main():
     with open("transactions.csv", mode="r") as f:
@@ -55,7 +54,6 @@ def main():
 
     reimbursed_transactions = set(reimbursed_transactions)
     transactions = {tuple(t.values()) for t in transactions}
-    reimbursements = {tuple(r.values()) for r in reimbursements}
 
     unexpensed_transactions = transactions.difference(reimbursed_transactions)
     return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
@@ -102,10 +100,12 @@ def tidy_desc(description):
 
     return tidied_description
 
+
 def write_to_file(payload, filepath):
     with open(filepath, "w") as f:
         writer = csv.writer(f)
         writer.writerows(payload)
+
 
 if __name__ == "__main__":
     matches, unexpensed, unmatched_reimbursements = main()
