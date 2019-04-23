@@ -85,7 +85,7 @@ def tidy_desc(description):
 
 
 def write_to_file(payload, filepath):
-    with open(filepath, "w") as f:
+    with open(filepath, mode="w") as f:
         writer = csv.writer(f)
         writer.writerows(payload)
 
@@ -94,13 +94,13 @@ if __name__ == "__main__":
     matches, unexpensed, unmatched_reimbursements = main()
 
     print "reimbursement & transaction match:", len(matches)
-    write_to_file(matches, "/Users/mindyor/play/finances/output/join.csv")
+    write_to_file(matches, "output/join.csv")
 
     print "transactions without reimbursement:", len(unexpensed)
-    write_to_file(unexpensed, "/Users/mindyor/play/finances/output/unexpensed_transactions.csv")
+    write_to_file(unexpensed, "output/unexpensed_transactions.csv")
 
     print "reimbursement without matching transaction:", len(unmatched_reimbursements)
-    write_to_file(unmatched_reimbursements, "/Users/mindyor/play/finances/output/unmatched_reimbursements.csv")
+    write_to_file(unmatched_reimbursements, "output/unmatched_reimbursements.csv")
 
     print
 
