@@ -5,11 +5,11 @@ from datetime import timedelta
 
 
 def main():
-    with open("transactions.csv", mode="r") as f:
+    with open("input/transactions.csv", mode="r") as f:
         transactions = list(csv.DictReader(f))
     print "transactions", len(transactions)
 
-    with open("reimbursements.csv", mode="r") as f:
+    with open("input/reimbursements.csv", mode="r") as f:
         reimbursements = list(csv.DictReader(f))
     print "reimbursements", len(reimbursements)
 
@@ -57,6 +57,7 @@ def main():
 
     unexpensed_transactions = transactions.difference(reimbursed_transactions)
     return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
+
 
 def tidy_desc(description):
     tidied_description = description.upper()\
@@ -111,13 +112,13 @@ if __name__ == "__main__":
     matches, unexpensed, unmatched_reimbursements = main()
 
     print "reimbursement & transaction match:", len(matches)
-    write_to_file(matches, "/Users/mindyor/play/finances/join.csv")
+    write_to_file(matches, "/Users/mindyor/play/finances/output/join.csv")
 
     print "transactions without reimbursement:", len(unexpensed)
-    write_to_file(unexpensed, "/Users/mindyor/play/finances/unexpensed_transactions.csv")
+    write_to_file(unexpensed, "/Users/mindyor/play/finances/output/unexpensed_transactions.csv")
 
     print "reimbursement without matching transaction:", len(unmatched_reimbursements)
-    write_to_file(unmatched_reimbursements, "/Users/mindyor/play/finances/unmatched_reimbursements.csv")
+    write_to_file(unmatched_reimbursements, "/Users/mindyor/play/finances/output/unmatched_reimbursements.csv")
 
     print
 
