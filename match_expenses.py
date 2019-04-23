@@ -1,7 +1,6 @@
 import csv
 import re
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 import json
 
 
@@ -12,32 +11,37 @@ def main():
     reimbursed_transactions = []
     unmatched_reimbursements = []
     for reimbursement in reimbursements:
-        rdate = reimbursement["Date"]
-        rcost = str(reimbursement["Amount"])
-        rdesc = reimbursement["Merchant"]
-
         found = False
         for transaction in transactions:
-            tcost = transaction["Amount"]
-            tdate = transaction["Date"]
-            tdesc = transaction["Description"]
-
-            if tcost == rcost:
-                # print(rdesc, tdesc, rdate, tdate, rcost, tcost)
-                if tdate - rdate < timedelta(days=5):
-                    if tdesc == rdesc:
-                        reimbursed_transactions.append(tuple(transaction.values()))
-                        found = True
-                        break
+            if is_match(reimbursement, transaction):
+                reimbursed_transactions.append(tuple(transaction.values()))
+                found = True
+                break
         if not found:
-            print(rdate, rcost, rdesc)
+            print (reimbursement["Date"], reimbursement["Amount"], reimbursement["Merchant"])
             unmatched_reimbursements.append(tuple(reimbursement.values()))
 
     reimbursed_transactions = set(reimbursed_transactions)
     transactions = {tuple(t.values()) for t in transactions}
-
     unexpensed_transactions = transactions.difference(reimbursed_transactions)
+
     return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
+
+
+def is_match(reimbursement, transaction):
+    rdate = reimbursement["Date"]
+    rcost = str(reimbursement["Amount"])
+    rdesc = reimbursement["Merchant"]
+    tcost = transaction["Amount"]
+    tdate = transaction["Date"]
+    tdesc = transaction["Description"]
+    if tcost == rcost and tdate - rdate < timedelta(days=5):
+        if tdesc == rdesc:
+            return True
+        # print description for debugging purposes: maybe your description.json needs more love?
+        # else:
+        #     print(tdesc)
+    return False
 
 
 def load_reimbursements():
@@ -91,7 +95,7 @@ def write_to_file(payload, filepath):
 
 
 if __name__ == "__main__":
-    matches, unexpensed, unmatched_reimbursements = main()
+    matches, unexpensed, lonely_reimbursement = main()
 
     print "reimbursement & transaction match:", len(matches)
     write_to_file(matches, "output/join.csv")
@@ -99,11 +103,11 @@ if __name__ == "__main__":
     print "transactions without reimbursement:", len(unexpensed)
     write_to_file(unexpensed, "output/unexpensed_transactions.csv")
 
-    print "reimbursement without matching transaction:", len(unmatched_reimbursements)
-    write_to_file(unmatched_reimbursements, "output/unmatched_reimbursements.csv")
+    print "reimbursement without matching transaction:", len(lonely_reimbursement)
+    write_to_file(lonely_reimbursement, "output/unmatched_reimbursements.csv")
 
     print
 
     print "how's the math?"
     print "transactions ?=", len(matches) + len(unexpensed)
-    print "reimbursements ?=", len(matches) + len(unmatched_reimbursements)
+    print "reimbursements ?=", len(matches) + len(lonely_reimbursement)
