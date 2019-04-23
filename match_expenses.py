@@ -8,24 +8,31 @@ def main():
     transactions = load_transactions()
     reimbursements = load_reimbursements()
 
-    reimbursed_transactions = []
-    unmatched_reimbursements = []
+    reimbursed_transactions, unmatched_reimbursements = match(reimbursements, transactions)
+    unexpensed_transactions = find_lonely_transactions(reimbursed_transactions, transactions)
+    return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
+
+
+def find_lonely_transactions(reimbursed_transactions, transactions):
+    transactions = {tuple(t.values()) for t in transactions}
+    unexpensed_transactions = transactions.difference(reimbursed_transactions)
+    return unexpensed_transactions
+
+
+def match(reimbursements, transactions):
+    reimbursed_transactions = set()
+    unmatched_reimbursements = set()
     for reimbursement in reimbursements:
         found = False
         for transaction in transactions:
             if is_match(reimbursement, transaction):
-                reimbursed_transactions.append(tuple(transaction.values()))
+                reimbursed_transactions.add(tuple(transaction.values()))
                 found = True
                 break
         if not found:
             print (reimbursement["Date"], reimbursement["Amount"], reimbursement["Merchant"])
-            unmatched_reimbursements.append(tuple(reimbursement.values()))
-
-    reimbursed_transactions = set(reimbursed_transactions)
-    transactions = {tuple(t.values()) for t in transactions}
-    unexpensed_transactions = transactions.difference(reimbursed_transactions)
-
-    return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
+            unmatched_reimbursements.add(tuple(reimbursement.values()))
+    return reimbursed_transactions, unmatched_reimbursements
 
 
 def is_match(reimbursement, transaction):

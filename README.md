@@ -23,7 +23,14 @@ It's still a bit particular and hardcoded to my particular workspace.
 * description mappings are most relevant to the last city I happened to be in
 * csv headers my bank (Chase) uses
 
-I've also noticed that airlines and hotels don't quite group their charges the same way I'll put things into expensify. For example, I might make 3 separate booking for airbnb and expense them separately, but get charged in lump sum. This script does not match those reimbursements/transactions.
+I've also noticed that airlines and hotels don't quite group their charges the same way I'll put things into expensify. 
+For example, I might make 3 separate booking for airbnb and expense them separately, but get charged in lump sum. 
+This script does not match those reimbursements/transactions.
+
+Due to some combination of the fuzziness of matching, not taking out transactions when they match), 
+and general laziness and wanting to use sets, multiple expenses might be marked as matched even if they match to the same transaction.
+So, for example, if you expensed 2 coffees but only bought one, this script would not complain.
+And if you got 2 of the same coffees on the same days, and only expensed one of them, this script still would not complain.
 
 Proceed at your own risk :)
 
