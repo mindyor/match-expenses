@@ -5,28 +5,8 @@ from datetime import timedelta
 
 
 def main():
-    with open("input/transactions.csv", mode="r") as f:
-        transactions = list(csv.DictReader(f))
-    print "transactions", len(transactions)
-
-    with open("input/reimbursements.csv", mode="r") as f:
-        reimbursements = list(csv.DictReader(f))
-    print "reimbursements", len(reimbursements)
-
-    print
-
-    transactions = [t for t in transactions
-                    if t["Type"] != "Payment"]
-
-    for transaction in transactions:
-        transaction["Amount"] = str(transaction["Amount"]).replace(",", "").replace("-","")
-        transaction["Date"] = datetime.strptime(transaction["Post Date"], "%m/%d/%Y").date()
-        transaction["Description"] = tidy_desc(transaction["Description"])
-
-    for reimbursement in reimbursements:
-        reimbursement["Date"] = datetime.strptime(reimbursement["\xef\xbb\xbfTimestamp"].split(" ")[0], "%Y-%m-%d").date()
-        reimbursement["Amount"] = str(reimbursement["Amount"]).replace(",", "").replace("-","")
-        reimbursement["Merchant"] = tidy_desc(reimbursement["Merchant"])
+    transactions = load_transactions()
+    reimbursements = load_reimbursements()
 
     reimbursed_transactions = []
     unmatched_reimbursements = []
@@ -43,7 +23,7 @@ def main():
 
             if tcost == rcost:
                 # print(rdesc, tdesc, rdate, tdate, rcost, tcost)
-                if tdate - rdate < timedelta(days = 5):
+                if tdate - rdate < timedelta(days=5):
                     if tdesc == rdesc:
                         reimbursed_transactions.append(tuple(transaction.values()))
                         found = True
@@ -57,6 +37,34 @@ def main():
 
     unexpensed_transactions = transactions.difference(reimbursed_transactions)
     return reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements
+
+
+def load_reimbursements():
+    with open("input/reimbursements.csv", mode="r") as f:
+        reimbursements = list(csv.DictReader(f))
+    print "reimbursements", len(reimbursements)
+    print
+
+    for reimbursement in reimbursements:
+        reimbursement["Date"] = datetime.strptime(reimbursement["\xef\xbb\xbfTimestamp"].split(" ")[0],
+                                                  "%Y-%m-%d").date()
+        reimbursement["Amount"] = str(reimbursement["Amount"]).replace(",", "").replace("-", "")
+        reimbursement["Merchant"] = tidy_desc(reimbursement["Merchant"])
+    return reimbursements
+
+
+def load_transactions():
+    with open("input/transactions.csv", mode="r") as f:
+        transactions = list(csv.DictReader(f))
+    print "transactions", len(transactions)
+
+    transactions = [t for t in transactions
+                    if t["Type"] != "Payment"]
+    for transaction in transactions:
+        transaction["Amount"] = str(transaction["Amount"]).replace(",", "").replace("-", "")
+        transaction["Date"] = datetime.strptime(transaction["Post Date"], "%m/%d/%Y").date()
+        transaction["Description"] = tidy_desc(transaction["Description"])
+    return transactions
 
 
 def tidy_desc(description):
