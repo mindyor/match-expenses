@@ -1,3 +1,4 @@
+## Description
 
 Matches report lines (reimbursements) from Expensify to bank statements.
 
@@ -6,7 +7,19 @@ Matches on
 * approximate date
 * (cleaned up) description/merchant
 
-# Input/Output
+#### Context
+
+Digging through my finances, I wanted to know my _real_ spend rate over time - how much am I spending that I haven't expensed?
+
+@walkerdb said, oh I have a script for that. This script is a fork off of theirs.
+
+After using this script to filter out all of the transactions I had reimbursed, I was able to see a much cleaner picture of my spending.
+
+I could also start to categorize and build pretty graphs (and find an item that had slipped through the cracks)... 
+but that's a script for another time.
+
+## Input/Output
+
 Expects
 * `input/transactions.csv`
 * `input/reimbursements.csv` (csv exported from Expensify. Default format.)
@@ -17,7 +30,8 @@ Outputs the whole venn diagram
 * `output/unexpensed_transactions.csv` - Transactions without reimbursements
 * `output/unmatched_reimbursements.csv` - Reimbursements without transactions.
 
-# Work in progress
+## Work in progress!
+
 It's still a bit particular and hardcoded to my particular workspace.
 * description mappings are most relevant to the last city I happened to be in
 * csv headers my bank (Chase) uses
@@ -46,9 +60,7 @@ pylint match_expenses/
 ```
 
 
-# Out of (near term) scope
+## Out of (near term) scope
+
 * integration with Expensify
 * distinguishing between reimbursable and non-reimbursable charges (who's reporting on non-reimbursable charges on expensify? Why?)
-
-# Credits
-Thanks @walkerdb for the inspiration and the starting script!
