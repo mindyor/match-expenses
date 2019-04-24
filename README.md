@@ -19,7 +19,6 @@ Outputs the whole venn diagram
 
 # Work in progress
 It's still a bit particular and hardcoded to my particular workspace.
-* filepaths
 * description mappings are most relevant to the last city I happened to be in
 * csv headers my bank (Chase) uses
 
@@ -31,6 +30,8 @@ Due to some combination of the fuzziness of matching, not taking out transaction
 and general laziness and wanting to use sets, multiple expenses might be marked as matched even if they match to the same transaction.
 So, for example, if you expensed 2 coffees but only bought one, this script would not complain.
 And if you got 2 of the same coffees on the same days, and only expensed one of them, this script still would not complain.
+
+Also it's on Python 2. Will probably switch to Python 3.
 
 Proceed at your own risk :)
 

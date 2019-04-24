@@ -1,17 +1,44 @@
 from datetime import timedelta
 
-import loader
-import printer
+from loader import load_csv
+from normalize_input import normalize
+from printer import print_results
+
+transactions_path = "input/transactions.csv"
+reimbursements_path = "input/reimbursements.csv"
+
+reimbursements_map = {
+    "amount_header": "Amount",
+    "description_header": "Merchant",
+    "date_header": "\xef\xbb\xbfTimestamp",
+    "date_format": "%Y-%m-%d"
+}
+
+transactions_map = {
+    "amount_header": "Amount",
+    "description_header": "Description",
+    "date_header": "Post Date",
+    "date_format": "%m/%d/%Y"
+}
 
 
 def main():
-    transactions = loader.load_transactions()
-    reimbursements = loader.load_reimbursements()
+    reimbursements = load_csv(reimbursements_path)
+    transactions = load_csv(transactions_path)
+
+    print "reimbursements", len(reimbursements)
+    print "transactions", len(transactions)
+    print
+
+    transactions = [t for t in transactions
+                    if t["Type"] != "Payment"]
+    normalize(transactions, transactions_map)
+    normalize(reimbursements, reimbursements_map)
 
     reimbursed_transactions, unmatched_reimbursements = match(reimbursements, transactions)
     unexpensed_transactions = find_lonely_transactions(reimbursed_transactions, transactions)
 
-    printer.print_results(reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements)
+    print_results(reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements)
 
 
 def find_lonely_transactions(reimbursed_transactions, transactions):
