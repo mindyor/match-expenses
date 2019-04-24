@@ -65,3 +65,9 @@ pylint match_expenses/
 
 * integration with Expensify
 * distinguishing between reimbursable and non-reimbursable charges (who's reporting on non-reimbursable charges on expensify? Why?)
+
+# Credits
+
+Thanks @walkderdb for initial inspiration and starting script.
+
+Thanks @walkderdb and @Ablexxive for feedback!

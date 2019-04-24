@@ -3,6 +3,7 @@ import re
 import json
 
 DESCRIPTION_MAP_PATH = "resources/description.json"
+DESCRIPTION_MAP = None
 
 
 def normalize(iterable, parse_map):
@@ -35,11 +36,17 @@ def normalize_description_content(description):
 
     tidied_description = re.sub(" +", " ", tidied_description)
 
-    with open(DESCRIPTION_MAP_PATH, mode="r") as description_map_file:
-        description_map = json.load(description_map_file)
-
-    for description_matcher, cleaned_description in description_map.iteritems():
+    for description_matcher, cleaned_description in get_description_map().iteritems():
         if re.search(description_matcher, tidied_description):
             return cleaned_description
 
     return tidied_description
+
+
+def get_description_map():
+    # Global keyword to let you change the variable, don't need it to just use the variable
+    global DESCRIPTION_MAP
+    if not DESCRIPTION_MAP:
+        with open(DESCRIPTION_MAP_PATH, mode="r") as description_map_file:
+            DESCRIPTION_MAP = json.load(description_map_file)
+    return DESCRIPTION_MAP
