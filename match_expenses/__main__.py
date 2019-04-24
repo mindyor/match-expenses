@@ -1,7 +1,6 @@
-from input import load_csv
+from matchio import load_csv, print_results
 from normalize import normalize
 from matchmake import match
-from output import print_results
 
 TRANSACTIONS_PATH = "input/transactions.csv"
 EXPENSES_PATH = "input/expenses.csv"

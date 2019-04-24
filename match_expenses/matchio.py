@@ -1,4 +1,11 @@
+import unicodecsv
 import csv
+
+
+def load_csv(path):
+    with open(path, mode="r") as csv_file:
+        payload = list(unicodecsv.DictReader(csv_file, encoding='utf-8-sig'))
+    return payload
 
 
 def print_results(matched_transactions, unmatched_expenses, transactions):
