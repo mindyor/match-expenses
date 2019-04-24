@@ -35,16 +35,9 @@ def main():
     normalize(transactions, TRANSACTIONS_MAP)
     normalize(reimbursements, REIMBURSEMENTS_MAP)
 
-    reimbursed_transactions, unmatched_reimbursements = match(reimbursements, transactions)
-    unexpensed_transactions = find_lonely_transactions(reimbursed_transactions, transactions)
+    matched_reimbursements, unmatched_reimbursements = match(reimbursements, transactions)
 
-    print_results(reimbursed_transactions, unexpensed_transactions, unmatched_reimbursements)
-
-
-def find_lonely_transactions(reimbursed_transactions, transactions):
-    transactions = {tuple(t.values()) for t in transactions}
-    unexpensed_transactions = transactions.difference(reimbursed_transactions)
-    return unexpensed_transactions
+    print_results(matched_reimbursements, unmatched_reimbursements, transactions)
 
 
 def match(reimbursements, transactions):
@@ -65,10 +58,10 @@ def match(reimbursements, transactions):
 
 def is_match(reimbursement, transaction):
     rdate = reimbursement["Date"]
-    rcost = str(reimbursement["Amount"])
+    rcost = reimbursement["Amount"]
     rdesc = reimbursement["Description"]
-    tcost = transaction["Amount"]
     tdate = transaction["Date"]
+    tcost = transaction["Amount"]
     tdesc = transaction["Description"]
     if tcost == rcost and tdate - rdate < timedelta(days=5):
         if tdesc == rdesc:
