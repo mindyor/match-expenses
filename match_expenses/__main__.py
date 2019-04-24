@@ -30,8 +30,8 @@ def main():
     print "transactions", len(transactions)
     print
 
-    normalize(transactions, TRANSACTIONS_MAP)
-    normalize(expenses, EXPENSES_MAP)
+    transactions = normalize(transactions, TRANSACTIONS_MAP)
+    expenses = normalize(expenses, EXPENSES_MAP)
 
     matched_expenses, unmatched_expenses = match(expenses, transactions)
 

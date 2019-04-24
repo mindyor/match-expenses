@@ -11,6 +11,7 @@ def normalize(iterable, parse_map):
         normalize_amount(line_item, parse_map["amount_header"])
         normalize_description(line_item, parse_map["description_header"])
         normalize_date(line_item, parse_map["date_header"], parse_map["date_format"])
+    return iterable
 
 
 def normalize_date(line_item, date_header, date_format):
