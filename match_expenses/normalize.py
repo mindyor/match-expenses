@@ -35,7 +35,8 @@ def normalize_description_content(description):
 
     tidied_description = re.sub(" +", " ", tidied_description)
 
-    description_map = json.load(open(DESCRIPTION_MAP_PATH))
+    with open(DESCRIPTION_MAP_PATH, mode="r") as description_map_file:
+        description_map = json.load(description_map_file)
 
     for description_matcher, cleaned_description in description_map.iteritems():
         if re.search(description_matcher, tidied_description):
