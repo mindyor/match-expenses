@@ -10,7 +10,7 @@ REIMBURSEMENTS_PATH = "input/reimbursements.csv"
 REIMBURSEMENTS_MAP = {
     "amount_header": "Amount",
     "description_header": "Merchant",
-    "date_header": "\xef\xbb\xbfTimestamp",
+    "date_header": "Timestamp",
     "date_format": "%Y-%m-%d"
 }
 

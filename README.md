@@ -51,6 +51,7 @@ Proceed at your own risk :)
 
 To run:
 ```bash
+pip install -r requirements.txt
 python match_expenses/matcher.py
 ```
 
