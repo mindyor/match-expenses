@@ -39,7 +39,7 @@ def match(reimbursements, transactions):
 def is_match(reimbursement, transaction):
     rdate = reimbursement["Date"]
     rcost = str(reimbursement["Amount"])
-    rdesc = reimbursement["Merchant"]
+    rdesc = reimbursement["Description"]
     tcost = transaction["Amount"]
     tdate = transaction["Date"]
     tdesc = transaction["Description"]

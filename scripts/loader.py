@@ -9,15 +9,24 @@ reimbursements_path = "input/reimbursements.csv"
 reimbursements_date_format = "%Y-%m-%d"
 transactions_date_format = "%m/%d/%Y"
 
+reimbursements_date_header = "\xef\xbb\xbfTimestamp"
+transactions_date_header = "Post Date"
+
+reimbursements_amount_header = "Amount"
+transactions_amount_header = "Amount"
+
+reimbursements_description_header = "Merchant"
+transactions_description_header = "Description"
+
 
 def load_reimbursements():
     reimbursements = load_csv(reimbursements_path)
     print "reimbursements", len(reimbursements)
 
     for reimbursement in reimbursements:
-        reimbursement["Date"] = parse_date(reimbursement["\xef\xbb\xbfTimestamp"], reimbursements_date_format)
-        reimbursement["Amount"] = normalize_amount(reimbursement["Amount"])
-        reimbursement["Merchant"] = normalize_description(reimbursement["Merchant"])
+        normalize_date(reimbursement, reimbursements_date_header, reimbursements_date_format)
+        normalize_amount(reimbursement, reimbursements_amount_header)
+        normalize_description(reimbursement, reimbursements_description_header)
     return reimbursements
 
 
@@ -28,22 +37,29 @@ def load_transactions():
     transactions = [t for t in transactions
                     if t["Type"] != "Payment"]
     for transaction in transactions:
-        transaction["Date"] = parse_date(transaction["Post Date"], transactions_date_format)
-        transaction["Amount"] = normalize_amount(transaction["Amount"])
-        transaction["Description"] = normalize_description(transaction["Description"])
+        normalize_date(transaction, transactions_date_header, transactions_date_format)
+        normalize_amount(transaction, transactions_amount_header)
+        normalize_description(transaction, transactions_description_header)
     return transactions
 
 
-def parse_date(date, date_format):
-    return datetime.strptime(date.split(" ")[0],date_format).date()
+def normalize_date(line_item, date_header, date_format):
+    date = line_item[date_header]
+    line_item["Date"] = datetime.strptime(date.split(" ")[0], date_format).date()
 
 
 # note: takes the absolute value of the amount
-def normalize_amount(amount):
-    return str(amount).replace(",", "").replace("-", "")
+def normalize_amount(line_item, amount_header):
+    amount = line_item[amount_header]
+    line_item["Amount"] = str(amount).replace(",", "").replace("-", "")
 
 
-def normalize_description(description):
+def normalize_description(line_item, description_header):
+    description = line_item[description_header]
+    line_item["Description"] = normalize_description_content(description)
+
+
+def normalize_description_content(description):
     tidied_description = description.upper() \
         .replace("SQ *", "") \
         .replace("&AMP;", "&")
