@@ -4,17 +4,17 @@ from loader import load_csv
 from normalize_input import normalize
 from printer import print_results
 
-transactions_path = "input/transactions.csv"
-reimbursements_path = "input/reimbursements.csv"
+TRANSACTIONS_PATH = "input/transactions.csv"
+REIMBURSEMENTS_PATH = "input/reimbursements.csv"
 
-reimbursements_map = {
+REIMBURSEMENTS_MAP = {
     "amount_header": "Amount",
     "description_header": "Merchant",
     "date_header": "\xef\xbb\xbfTimestamp",
     "date_format": "%Y-%m-%d"
 }
 
-transactions_map = {
+TRANSACTIONS_MAP = {
     "amount_header": "Amount",
     "description_header": "Description",
     "date_header": "Post Date",
@@ -23,8 +23,8 @@ transactions_map = {
 
 
 def main():
-    reimbursements = load_csv(reimbursements_path)
-    transactions = load_csv(transactions_path)
+    reimbursements = load_csv(REIMBURSEMENTS_PATH)
+    transactions = load_csv(TRANSACTIONS_PATH)
 
     print "reimbursements", len(reimbursements)
     print "transactions", len(transactions)
@@ -32,8 +32,8 @@ def main():
 
     transactions = [t for t in transactions
                     if t["Type"] != "Payment"]
-    normalize(transactions, transactions_map)
-    normalize(reimbursements, reimbursements_map)
+    normalize(transactions, TRANSACTIONS_MAP)
+    normalize(reimbursements, REIMBURSEMENTS_MAP)
 
     reimbursed_transactions, unmatched_reimbursements = match(reimbursements, transactions)
     unexpensed_transactions = find_lonely_transactions(reimbursed_transactions, transactions)

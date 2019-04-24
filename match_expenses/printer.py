@@ -2,8 +2,8 @@ import csv
 
 
 def write_to_file(payload, filepath):
-    with open(filepath, mode="w") as f:
-        writer = csv.writer(f)
+    with open(filepath, mode="w") as csv_file:
+        writer = csv.writer(csv_file)
         writer.writerows(payload)
 
 

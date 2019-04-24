@@ -35,9 +35,16 @@ Also it's on Python 2. Will probably switch to Python 3.
 
 Proceed at your own risk :)
 
+To run:
 ```bash
-python scripts/match_expenses.py
+python match_expenses/matcher.py
 ```
+
+To run:
+```bash
+pylint match_expenses/
+```
+
 
 # Out of (near term) scope
 * integration with Expensify
