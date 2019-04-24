@@ -6,17 +6,19 @@ import json
 transactions_path = "input/transactions.csv"
 reimbursements_path = "input/reimbursements.csv"
 
-reimbursements_date_format = "%Y-%m-%d"
-transactions_date_format = "%m/%d/%Y"
+reimbursements_map = {
+    "amount_header": "Amount",
+    "description_header": "Merchant",
+    "date_header": "\xef\xbb\xbfTimestamp",
+    "date_format": "%Y-%m-%d"
+}
 
-reimbursements_date_header = "\xef\xbb\xbfTimestamp"
-transactions_date_header = "Post Date"
-
-reimbursements_amount_header = "Amount"
-transactions_amount_header = "Amount"
-
-reimbursements_description_header = "Merchant"
-transactions_description_header = "Description"
+transactions_map = {
+    "amount_header": "Amount",
+    "description_header": "Description",
+    "date_header": "Post Date",
+    "date_format": "%m/%d/%Y"
+}
 
 
 def load_reimbursements():
@@ -24,9 +26,7 @@ def load_reimbursements():
     print "reimbursements", len(reimbursements)
 
     for reimbursement in reimbursements:
-        normalize_date(reimbursement, reimbursements_date_header, reimbursements_date_format)
-        normalize_amount(reimbursement, reimbursements_amount_header)
-        normalize_description(reimbursement, reimbursements_description_header)
+        normalize(reimbursement, reimbursements_map)
     return reimbursements
 
 
@@ -37,10 +37,14 @@ def load_transactions():
     transactions = [t for t in transactions
                     if t["Type"] != "Payment"]
     for transaction in transactions:
-        normalize_date(transaction, transactions_date_header, transactions_date_format)
-        normalize_amount(transaction, transactions_amount_header)
-        normalize_description(transaction, transactions_description_header)
+        normalize(transaction, transactions_map)
     return transactions
+
+
+def normalize(line_item, parse_map):
+    normalize_amount(line_item, parse_map["amount_header"])
+    normalize_description(line_item, parse_map["description_header"])
+    normalize_date(line_item, parse_map["date_header"], parse_map["date_format"])
 
 
 def normalize_date(line_item, date_header, date_format):
