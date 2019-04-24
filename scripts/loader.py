@@ -3,36 +3,47 @@ from datetime import datetime
 import re
 import json
 
+transactions_path = "input/transactions.csv"
+reimbursements_path = "input/reimbursements.csv"
+
+reimbursements_date_format = "%Y-%m-%d"
+transactions_date_format = "%m/%d/%Y"
+
 
 def load_reimbursements():
-    with open("input/reimbursements.csv", mode="r") as f:
-        reimbursements = list(csv.DictReader(f))
+    reimbursements = load_csv(reimbursements_path)
     print "reimbursements", len(reimbursements)
-    print
 
     for reimbursement in reimbursements:
-        reimbursement["Date"] = datetime.strptime(reimbursement["\xef\xbb\xbfTimestamp"].split(" ")[0],
-                                                  "%Y-%m-%d").date()
-        reimbursement["Amount"] = str(reimbursement["Amount"]).replace(",", "").replace("-", "")
-        reimbursement["Merchant"] = tidy_desc(reimbursement["Merchant"])
+        reimbursement["Date"] = parse_date(reimbursement["\xef\xbb\xbfTimestamp"], reimbursements_date_format)
+        reimbursement["Amount"] = normalize_amount(reimbursement["Amount"])
+        reimbursement["Merchant"] = normalize_description(reimbursement["Merchant"])
     return reimbursements
 
 
 def load_transactions():
-    with open("input/transactions.csv", mode="r") as f:
-        transactions = list(csv.DictReader(f))
+    transactions = load_csv(transactions_path)
     print "transactions", len(transactions)
 
     transactions = [t for t in transactions
                     if t["Type"] != "Payment"]
     for transaction in transactions:
-        transaction["Amount"] = str(transaction["Amount"]).replace(",", "").replace("-", "")
-        transaction["Date"] = datetime.strptime(transaction["Post Date"], "%m/%d/%Y").date()
-        transaction["Description"] = tidy_desc(transaction["Description"])
+        transaction["Date"] = parse_date(transaction["Post Date"], transactions_date_format)
+        transaction["Amount"] = normalize_amount(transaction["Amount"])
+        transaction["Description"] = normalize_description(transaction["Description"])
     return transactions
 
 
-def tidy_desc(description):
+def parse_date(date, date_format):
+    return datetime.strptime(date.split(" ")[0],date_format).date()
+
+
+# note: takes the absolute value of the amount
+def normalize_amount(amount):
+    return str(amount).replace(",", "").replace("-", "")
+
+
+def normalize_description(description):
     tidied_description = description.upper() \
         .replace("SQ *", "") \
         .replace("&AMP;", "&")
@@ -46,3 +57,9 @@ def tidy_desc(description):
             return cleaned_description
 
     return tidied_description
+
+
+def load_csv(path):
+    with open(path, mode="r") as f:
+        payload = list(csv.DictReader(f))
+    return payload
