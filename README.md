@@ -1,6 +1,6 @@
 ## Description
 
-Matches report lines (reimbursements) from Expensify to bank statements.
+Matches report lines (expenses/reimbursements) from Expensify to bank statements.
 
 Matches on
 * amount
@@ -22,13 +22,13 @@ but that's a script for another time.
 
 Expects
 * `input/transactions.csv`
-* `input/reimbursements.csv` (csv exported from Expensify. Default format.)
-* `resources/description.json` (mappings to clean up the transaction/reimbursement descriptions - promote matching)
+* `input/expenses.csv` (csv exported from Expensify. Default format.)
+* `resources/description.json` (mappings to clean up the transaction/expense descriptions - promote matching)
 
 Outputs the whole venn diagram
 * `output/join.csv` - Matches that were found between the two
-* `output/unexpensed_transactions.csv` - Transactions without reimbursements
-* `output/unmatched_reimbursements.csv` - Reimbursements without transactions.
+* `output/unexpensed_transactions.csv` - Transactions without expenses
+* `output/unmatched_expenses.csv` - Expenses without corresponding transactions.
 
 ## Work in progress!
 
@@ -38,7 +38,7 @@ It's still a bit particular and hardcoded to my particular workspace.
 
 I've also noticed that airlines and hotels don't quite group their charges the same way I'll put things into expensify. 
 For example, I might make 3 separate booking for airbnb and expense them separately, but get charged in lump sum. 
-This script does not match those reimbursements/transactions.
+This script does not match those expenses/transactions.
 
 Due to some combination of the fuzziness of matching, not taking out transactions when they match), 
 and general laziness and wanting to use sets, multiple expenses might be marked as matched even if they match to the same transaction.
@@ -52,7 +52,7 @@ Proceed at your own risk :)
 To run:
 ```bash
 pip install -r requirements.txt
-python match_expenses/matcher.py
+python match_expenses
 ```
 
 To run:

@@ -1,21 +1,21 @@
 import csv
 
 
-def print_results(matched_transaction, unmatched_reimbursement, transactions):
-    print "reimbursement & transaction match:", len(matched_transaction)
-    write_to_file(matched_transaction, "output/join.csv")
+def print_results(matched_transactions, unmatched_expenses, transactions):
+    print "expense & transaction match:", len(matched_transactions)
+    write_to_file(matched_transactions, "output/join.csv")
 
-    print "reimbursement without matching transaction:", len(unmatched_reimbursement)
-    write_to_file(unmatched_reimbursement, "output/unmatched_reimbursements.csv")
+    print "expenses without matching transaction:", len(unmatched_expenses)
+    write_to_file(unmatched_expenses, "output/unmatched_expenses.csv")
 
-    unmatched_transaction = find_lonely_transactions(transactions, matched_transaction)
-    print "transactions without reimbursement:", len(unmatched_transaction)
+    unmatched_transaction = find_lonely_transactions(transactions, matched_transactions)
+    print "transactions without expense:", len(unmatched_transaction)
     write_to_file(unmatched_transaction, "output/unexpensed_transactions.csv")
     print
 
     print "how's the math?"
-    print "total transactions ?=", len(matched_transaction) + len(unmatched_transaction)
-    print "total reimbursements ?=", len(matched_transaction) + len(unmatched_reimbursement)
+    print "total transactions ?=", len(matched_transactions) + len(unmatched_transaction)
+    print "total expenses ?=", len(matched_transactions) + len(unmatched_expenses)
 
 
 def find_lonely_transactions(transactions, matched_transactions):

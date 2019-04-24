@@ -1,26 +1,26 @@
 from datetime import timedelta
 
 
-def match(reimbursements, transactions):
-    reimbursed_transactions = set()
-    unmatched_reimbursements = set()
-    for reimbursement in reimbursements:
+def match(expenses, transactions):
+    matched_expenses = set()
+    unmatched_expenses = set()
+    for expense in expenses:
         found = False
         for transaction in transactions:
-            if is_match(reimbursement, transaction):
-                reimbursed_transactions.add(tuple(transaction.values()))
+            if is_match(expense, transaction):
+                matched_expenses.add(tuple(transaction.values()))
                 found = True
                 break
         if not found:
-            print (reimbursement["Date"], reimbursement["Amount"], reimbursement["Merchant"])
-            unmatched_reimbursements.add(tuple(reimbursement.values()))
-    return reimbursed_transactions, unmatched_reimbursements
+            print (expense["Date"], expense["Amount"], expense["Merchant"])
+            unmatched_expenses.add(tuple(expense.values()))
+    return matched_expenses, unmatched_expenses
 
 
-def is_match(reimbursement, transaction):
-    rdate = reimbursement["Date"]
-    rcost = reimbursement["Amount"]
-    rdesc = reimbursement["Description"]
+def is_match(expense, transaction):
+    rdate = expense["Date"]
+    rcost = expense["Amount"]
+    rdesc = expense["Description"]
     tdate = transaction["Date"]
     tcost = transaction["Amount"]
     tdesc = transaction["Description"]
