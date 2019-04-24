@@ -1,7 +1,7 @@
-from loader import load_csv
-from normalize_input import normalize
-from printer import print_results
-from matcher import match
+from input import load_csv
+from normalize import normalize
+from matchmake import match
+from output import print_results
 
 TRANSACTIONS_PATH = "input/transactions.csv"
 EXPENSES_PATH = "input/expenses.csv"
@@ -24,13 +24,13 @@ TRANSACTIONS_MAP = {
 def main():
     expenses = load_csv(EXPENSES_PATH)
     transactions = load_csv(TRANSACTIONS_PATH)
+    transactions = [t for t in transactions
+                    if t["Type"] != "Payment"]
 
     print "expenses", len(expenses)
     print "transactions", len(transactions)
     print
 
-    transactions = [t for t in transactions
-                    if t["Type"] != "Payment"]
     normalize(transactions, TRANSACTIONS_MAP)
     normalize(expenses, EXPENSES_MAP)
 

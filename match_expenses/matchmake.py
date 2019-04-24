@@ -14,6 +14,7 @@ def match(expenses, transactions):
         if not found:
             print (expense["Date"], expense["Amount"], expense["Merchant"])
             unmatched_expenses.add(tuple(expense.values()))
+    print
     return matched_expenses, unmatched_expenses
 
 
